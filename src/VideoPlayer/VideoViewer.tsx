@@ -4,7 +4,7 @@ import MediaControls, { PLAYER_STATES } from '.';
 import Video from 'react-native-video';
 
 interface Props {
-  source: { uri: string };
+  source: { uri: any };
   currentIndex: number;
   mainVideoColor?: string;
   onHidePageInfo: () => void;

@@ -6,7 +6,7 @@
  *
  */
 
-import React, {useCallback, useRef, useState} from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import VideoViewer from '../../VideoPlayer/VideoViewer';
 import {
   Animated,
@@ -23,9 +23,9 @@ import {
 import useDoubleTapToZoom from '../../hooks/useDoubleTapToZoom';
 import useImageDimensions from '../../hooks/useImageDimensions';
 
-import {getImageStyles, getImageTransform} from '../../utils';
-import {ImageSource} from '../../@types';
-import {ImageLoading} from './ImageLoading';
+import { getImageStyles, getImageTransform } from '../../utils';
+import { ImageSource } from '../../@types';
+import { ImageLoading } from './ImageLoading';
 
 const SWIPE_CLOSE_OFFSET = 75;
 const SWIPE_CLOSE_VELOCITY = 1.55;
@@ -78,33 +78,25 @@ const ImageItem = ({
     inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
     outputRange: [0.5, 1, 0.5],
   });
-  const imagesStyles = getImageStyles(
-    imageDimensions,
-    translateValue,
-    scaleValue,
-  );
-  const imageStylesWithOpacity = {...imagesStyles, opacity: imageOpacity};
+  const imagesStyles = getImageStyles(imageDimensions, translateValue, scaleValue);
+  const imageStylesWithOpacity = { ...imagesStyles, opacity: imageOpacity };
 
   const onScrollEndDrag = useCallback(
-    ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
+    ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
       const velocityY = nativeEvent?.velocity?.y ?? 0;
       const scaled = nativeEvent?.zoomScale > 1;
 
       onZoom(scaled);
       setScaled(scaled);
 
-      if (
-        !scaled &&
-        swipeToCloseEnabled &&
-        Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY
-      ) {
+      if (!scaled && swipeToCloseEnabled && Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY) {
         onRequestClose();
       }
     },
     [scaled],
   );
 
-  const onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const onScroll = ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = nativeEvent?.contentOffset?.y ?? 0;
 
     if (nativeEvent?.zoomScale > 1) {
@@ -122,7 +114,6 @@ const ImageItem = ({
   );
 
   const isImage = mediaType === 'image';
-
   return (
     <View>
       <ScrollView
@@ -139,23 +130,21 @@ const ImageItem = ({
         scrollEventThrottle={1}
         {...(swipeToCloseEnabled && {
           onScroll,
-        })}>
+        })}
+      >
         {isImage && (!loaded || !imageDimensions) && <ImageLoading />}
         <TouchableWithoutFeedback
           onPress={doubleTapToZoomEnabled ? handleDoubleTap : undefined}
           onLongPress={onLongPressHandler}
-          delayLongPress={delayLongPress}>
+          delayLongPress={delayLongPress}
+        >
           {isImage ? (
-            <Animated.Image
-              source={imageSrc}
-              style={imageStylesWithOpacity}
-              onLoad={() => setLoaded(true)}
-            />
+            <Animated.Image source={imageSrc} style={imageStylesWithOpacity} onLoad={() => setLoaded(true)} />
           ) : (
             <VideoViewer
+              // @ts-ignore
               source={{
-                uri:
-                  'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4',
+                uri: imageSrc,
               }}
               currentIndex={currentIndex}
               mainVideoColor={mainVideoColor}

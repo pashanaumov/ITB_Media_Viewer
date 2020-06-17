@@ -135,7 +135,7 @@ const ImageItem = ({
         >
           <VideoViewer
             source={{
-              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4',
+              uri: imageSrc,
             }}
             currentIndex={currentIndex}
             mainVideoColor={mainVideoColor}
