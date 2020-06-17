@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "declaration": true,
+    "module": "esnext",
+    "strict": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "jsx": "react-native",
+    "lib": ["dom", "es5", "es6", "scripthost"],
+    "target": "es5",
+    "outDir": "./lib",
+    "sourceMap": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/__tests__/*"],
+  "jsx": "react"
+}
