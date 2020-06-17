@@ -8,7 +8,7 @@
     "lib/**/*"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && copyfiles --flat src/VideoPlayer/assets/*.png lib/VideoPlayer/assets",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build"
   },
