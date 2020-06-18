@@ -25,15 +25,18 @@ let lastTapTS: number | null = null;
 function useDoubleTapToZoom(
   scrollViewRef: React.RefObject<ScrollView>,
   scaled: boolean,
-  screen: Dimensions
+  screen: Dimensions,
+  toggleHeaderFooter: () => void
 ) {
   const handleDoubleTap = useCallback(
     (event: NativeSyntheticEvent<NativeTouchEvent>) => {
+      if(!scaled) {
+        toggleHeaderFooter()
+      } 
       const nowTS = new Date().getTime();
       const scrollResponderRef = scrollViewRef?.current?.getScrollResponder();
-
+      const { pageX, pageY } = event.nativeEvent;
       if (lastTapTS && nowTS - lastTapTS < DOUBLE_TAP_DELAY) {
-        const { pageX, pageY } = event.nativeEvent;
         let targetX = 0;
         let targetY = 0;
         let targetWidth = screen.width;
@@ -47,7 +50,6 @@ function useDoubleTapToZoom(
           targetWidth = screen.width / 2;
           targetHeight = screen.height / 2;
         }
-
         // @ts-ignore
         scrollResponderRef?.scrollResponderZoomTo({
           x: targetX,
@@ -62,7 +64,7 @@ function useDoubleTapToZoom(
     },
     [scaled]
   );
-
+ 
   return handleDoubleTap;
 }
 

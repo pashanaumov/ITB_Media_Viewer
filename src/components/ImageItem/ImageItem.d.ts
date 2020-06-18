@@ -6,9 +6,9 @@
  *
  */
 
-import React from 'react';
-import {GestureResponderEvent} from 'react-native';
-import {ImageSource} from '../../@types';
+import React from "react";
+import { GestureResponderEvent } from "react-native";
+import { ImageSource } from "../../@types";
 
 declare type Props = {
   imageSrc: ImageSource;
@@ -17,13 +17,14 @@ declare type Props = {
   onLongPress: (image: ImageSource) => void;
   onSeek: (seeking: boolean) => void;
   onHidePageInfo: () => void;
+  toggleHeaderFooter: () => void;
   delayLongPress: number;
   swipeToCloseEnabled?: boolean;
   doubleTapToZoomEnabled?: boolean;
   mediaType: string;
   currentIndex: number;
   mainVideoColor: string | undefined;
-  
+  headerFooterVisible: boolean;
 };
 
 declare const _default: React.MemoExoticComponent<({
@@ -37,7 +38,9 @@ declare const _default: React.MemoExoticComponent<({
   currentIndex,
   mainVideoColor,
   onSeek,
-  onHidePageInfo
+  onHidePageInfo,
+  headerFooterVisible,
+  toggleHeaderFooter
 }: Props) => JSX.Element>;
 
 export default _default;

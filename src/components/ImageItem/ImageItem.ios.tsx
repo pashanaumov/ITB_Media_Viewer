@@ -6,8 +6,8 @@
  *
  */
 
-import React, { useCallback, useRef, useState } from 'react';
-import VideoViewer from '../../VideoPlayer/VideoViewer';
+import React, { useCallback, useRef, useState } from "react";
+import VideoViewer from "../../VideoPlayer/VideoViewer";
 import {
   Animated,
   Dimensions,
@@ -18,18 +18,18 @@ import {
   NativeSyntheticEvent,
   TouchableWithoutFeedback,
   GestureResponderEvent,
-} from 'react-native';
+} from "react-native";
 
-import useDoubleTapToZoom from '../../hooks/useDoubleTapToZoom';
-import useImageDimensions from '../../hooks/useImageDimensions';
+import useDoubleTapToZoom from "../../hooks/useDoubleTapToZoom";
+import useImageDimensions from "../../hooks/useImageDimensions";
 
-import { getImageStyles, getImageTransform } from '../../utils';
-import { ImageSource } from '../../@types';
-import { ImageLoading } from './ImageLoading';
+import { getImageStyles, getImageTransform } from "../../utils";
+import { ImageSource } from "../../@types";
+import { ImageLoading } from "./ImageLoading";
 
 const SWIPE_CLOSE_OFFSET = 75;
 const SWIPE_CLOSE_VELOCITY = 1.55;
-const SCREEN = Dimensions.get('screen');
+const SCREEN = Dimensions.get("screen");
 const SCREEN_WIDTH = SCREEN.width;
 const SCREEN_HEIGHT = SCREEN.height;
 
@@ -44,8 +44,10 @@ type Props = {
   mediaType: string;
   currentIndex: number;
   mainVideoColor: string;
+  headerFooterVisible: boolean;
   onHidePageInfo: () => void;
   onSeek: () => void;
+  toggleHeaderFooter: () => void;
 };
 
 const ImageItem = ({
@@ -61,12 +63,14 @@ const ImageItem = ({
   mainVideoColor,
   onHidePageInfo,
   onSeek,
+  toggleHeaderFooter,
+  headerFooterVisible
 }: Props) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const [loaded, setLoaded] = useState(false);
   const [scaled, setScaled] = useState(false);
   const imageDimensions = useImageDimensions(imageSrc);
-  const handleDoubleTap = useDoubleTapToZoom(scrollViewRef, scaled, SCREEN);
+  const handleDoubleTap = useDoubleTapToZoom(scrollViewRef, scaled, SCREEN, toggleHeaderFooter);
 
   const [translate, scale] = getImageTransform(imageDimensions, SCREEN);
   const scrollValueY = new Animated.Value(0);
@@ -78,7 +82,11 @@ const ImageItem = ({
     inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
     outputRange: [0.5, 1, 0.5],
   });
-  const imagesStyles = getImageStyles(imageDimensions, translateValue, scaleValue);
+  const imagesStyles = getImageStyles(
+    imageDimensions,
+    translateValue,
+    scaleValue
+  );
   const imageStylesWithOpacity = { ...imagesStyles, opacity: imageOpacity };
 
   const onScrollEndDrag = useCallback(
@@ -89,14 +97,20 @@ const ImageItem = ({
       onZoom(scaled);
       setScaled(scaled);
 
-      if (!scaled && swipeToCloseEnabled && Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY) {
+      if (
+        !scaled &&
+        swipeToCloseEnabled &&
+        Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY
+      ) {
         onRequestClose();
       }
     },
-    [scaled],
+    [scaled]
   );
 
-  const onScroll = ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const onScroll = ({
+    nativeEvent,
+  }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = nativeEvent?.contentOffset?.y ?? 0;
 
     if (nativeEvent?.zoomScale > 1) {
@@ -110,10 +124,10 @@ const ImageItem = ({
     (event: GestureResponderEvent) => {
       onLongPress(imageSrc);
     },
-    [imageSrc, onLongPress],
+    [imageSrc, onLongPress]
   );
 
-  const isImage = mediaType === 'image';
+  const isImage = mediaType === "image";
   return (
     <View>
       <ScrollView
@@ -139,7 +153,11 @@ const ImageItem = ({
           delayLongPress={delayLongPress}
         >
           {isImage ? (
-            <Animated.Image source={imageSrc} style={imageStylesWithOpacity} onLoad={() => setLoaded(true)} />
+            <Animated.Image
+              source={imageSrc}
+              style={imageStylesWithOpacity}
+              onLoad={() => setLoaded(true)}
+            />
           ) : (
             <VideoViewer
               // @ts-ignore
