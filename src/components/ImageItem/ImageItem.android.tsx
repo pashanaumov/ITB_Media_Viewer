@@ -134,9 +134,8 @@ const ImageItem = ({
           }}
         >
           <VideoViewer
-            source={{
-              uri: imageSrc,
-            }}
+            // @ts-ignore
+            source={imageSrc}
             currentIndex={currentIndex}
             mainVideoColor={mainVideoColor}
             onHidePageInfo={onHidePageInfo}
