@@ -158,7 +158,7 @@ function ImageViewing({
           )}
           onMomentumScrollEnd={onScroll}
           keyExtractor={(imageSrc) => {
-            // @ts-ignore
+            //@ts-ignore
             return imageSrc.messageId ?? imageSrc.messageTime;
           }}
         />

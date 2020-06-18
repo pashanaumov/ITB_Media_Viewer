@@ -1,7 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, View, StatusBar, Dimensions, Platform } from 'react-native';
-import MediaControls, { PLAYER_STATES } from '.';
-import Video from 'react-native-video';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  StyleSheet,
+  View,
+  StatusBar,
+  Dimensions,
+  Platform,
+} from "react-native";
+import MediaControls, { PLAYER_STATES } from ".";
+import Video from "react-native-video";
 
 interface Props {
   source: { uri: any };
@@ -9,11 +15,19 @@ interface Props {
   mainVideoColor?: string;
   onHidePageInfo: () => void;
   doSeek: (seeking: boolean) => void;
+  toggleHeaderFooter: () => void;
 }
 
 export default (props: Props) => {
-  const { source, currentIndex, mainVideoColor, onHidePageInfo, doSeek } = props;
-  const mainColor = mainVideoColor ? mainVideoColor : 'rgb(255, 74, 125)';
+  const {
+    source,
+    currentIndex,
+    mainVideoColor,
+    onHidePageInfo,
+    doSeek,
+    toggleHeaderFooter,
+  } = props;
+  const mainColor = mainVideoColor ? mainVideoColor : "rgb(255, 74, 125)";
   const videoPlayer = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -67,7 +81,7 @@ export default (props: Props) => {
   };
 
   const onFullScreen = () => {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       setIsFullScreen(true);
     } else {
       onHidePageInfo();
@@ -78,7 +92,7 @@ export default (props: Props) => {
   const onDismissFullScreen = () => setIsFullScreen(false);
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Video
         // @ts-ignore
         ref={(ref: any) => (videoPlayer.current = ref)}
@@ -106,6 +120,7 @@ export default (props: Props) => {
         playerState={playerState}
         progress={currentTime}
         onFullScreen={onFullScreen}
+        toggleHeaderFooter={toggleHeaderFooter}
       />
     </View>
   );
@@ -114,19 +129,19 @@ export default (props: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: Dimensions.get('window').height,
-    height: Dimensions.get('window').width,
-    minWidth: Dimensions.get('window').height,
-    minHeight: Dimensions.get('window').width,
+    width: Dimensions.get("window").height,
+    height: Dimensions.get("window").width,
+    minWidth: Dimensions.get("window").height,
+    minHeight: Dimensions.get("window").width,
   },
   mediaPlayer: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     bottom: 0,
     right: 0,
-    backgroundColor: 'black',
-    width: Dimensions.get('window').width,
+    backgroundColor: "black",
+    width: Dimensions.get("window").width,
     flex: 1,
   },
 });

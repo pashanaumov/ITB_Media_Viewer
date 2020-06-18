@@ -6,22 +6,29 @@
  *
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback } from "react";
 
-import { Animated, Dimensions, StyleSheet, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  StyleSheet,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  View,
+} from "react-native";
 
-import VideoViewer from '../../VideoPlayer/VideoViewer';
+import VideoViewer from "../../VideoPlayer/VideoViewer";
 
-import useImageDimensions from '../../hooks/useImageDimensions';
-import usePanResponder from '../../hooks/usePanResponder';
+import useImageDimensions from "../../hooks/useImageDimensions";
+import usePanResponder from "../../hooks/usePanResponder";
 
-import { getImageStyles, getImageTransform } from '../../utils';
-import { ImageSource } from '../../@types/index';
-import { ImageLoading } from './ImageLoading';
+import { getImageStyles, getImageTransform } from "../../utils";
+import { ImageSource } from "../../@types/index";
+import { ImageLoading } from "./ImageLoading";
 
 const SWIPE_CLOSE_OFFSET = 75;
 const SWIPE_CLOSE_VELOCITY = 1.75;
-const SCREEN = Dimensions.get('window');
+const SCREEN = Dimensions.get("window");
 const SCREEN_WIDTH = SCREEN.width;
 const SCREEN_HEIGHT = SCREEN.height;
 
@@ -38,6 +45,7 @@ type Props = {
   mainVideoColor: string;
   onHidePageInfo: () => void;
   onSeek: () => void;
+  toggleHeaderFooter: () => void;
 };
 
 const ImageItem = ({
@@ -53,6 +61,7 @@ const ImageItem = ({
   mainVideoColor,
   onHidePageInfo,
   onSeek,
+  toggleHeaderFooter,
 }: Props) => {
   const imageContainer = React.createRef<any>();
   const imageDimensions = useImageDimensions(imageSrc);
@@ -82,70 +91,89 @@ const ImageItem = ({
     doubleTapToZoomEnabled,
     onLongPress: onLongPressHandler,
     delayLongPress,
+
   });
 
-  const imagesStyles = getImageStyles(imageDimensions, translateValue, scaleValue);
+  const imagesStyles = getImageStyles(
+    imageDimensions,
+    translateValue,
+    scaleValue
+  );
   const imageOpacity = scrollValueY.interpolate({
     inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
     outputRange: [0.7, 1, 0.7],
   });
   const imageStylesWithOpacity = { ...imagesStyles, opacity: imageOpacity };
 
-  const onScrollEndDrag = ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const onScrollEndDrag = ({
+    nativeEvent,
+  }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const velocityY = nativeEvent?.velocity?.y ?? 0;
     const offsetY = nativeEvent?.contentOffset?.y ?? 0;
 
-    if ((Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY && offsetY > SWIPE_CLOSE_OFFSET) || offsetY > SCREEN_HEIGHT / 2) {
+    if (
+      (Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY &&
+        offsetY > SWIPE_CLOSE_OFFSET) ||
+      offsetY > SCREEN_HEIGHT / 2
+    ) {
       onRequestClose();
     }
   };
 
-  const onScroll = ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const onScroll = ({
+    nativeEvent,
+  }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = nativeEvent?.contentOffset?.y ?? 0;
 
     scrollValueY.setValue(offsetY);
   };
 
-  const isImage = mediaType === 'image';
+  const isImage = mediaType === "image";
 
   return (
-    <Animated.ScrollView
-      // @ts-ignore
-      ref={imageContainer}
-      style={styles.listItem}
-      pagingEnabled
-      nestedScrollEnabled
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.imageScrollContainer}
-      scrollEnabled={swipeToCloseEnabled}
-      {...(swipeToCloseEnabled && {
-        onScroll,
-        onScrollEndDrag,
-      })}
-    >
-      {isImage ? (
-        <Animated.Image {...panHandlers} source={imageSrc} style={imageStylesWithOpacity} onLoad={onLoaded} />
-      ) : (
-        <View
-          style={{
-            height: SCREEN_HEIGHT,
-            width: SCREEN_WIDTH,
-          }}
-        >
-          <VideoViewer
-            // @ts-ignore
+      <Animated.ScrollView
+        // @ts-ignore
+        ref={imageContainer}
+        style={styles.listItem}
+        pagingEnabled
+        nestedScrollEnabled
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.imageScrollContainer}
+        scrollEnabled={swipeToCloseEnabled}
+        {...(swipeToCloseEnabled && {
+          onScroll,
+          onScrollEndDrag,
+        })}
+      >
+        {isImage ? (
+          <Animated.Image
+            {...panHandlers}
             source={imageSrc}
-            currentIndex={currentIndex}
-            mainVideoColor={mainVideoColor}
-            onHidePageInfo={onHidePageInfo}
-            doSeek={onSeek}
+            style={imageStylesWithOpacity}
+            onLoad={onLoaded}
           />
-        </View>
-      )}
+        ) : (
+          <View
+            style={{
+              height: SCREEN_HEIGHT,
+              width: SCREEN_WIDTH,
+            }}
+          >
+            <VideoViewer
+              // @ts-ignore
+              source={imageSrc}
+              currentIndex={currentIndex}
+              mainVideoColor={mainVideoColor}
+              onHidePageInfo={onHidePageInfo}
+              doSeek={onSeek}
+              toggleHeaderFooter={toggleHeaderFooter}
+            />
+          </View>
+        )}
 
-      {isImage && (!isLoaded || !imageDimensions) && <ImageLoading />}
-    </Animated.ScrollView>
+        {isImage && (!isLoaded || !imageDimensions) && <ImageLoading />}
+      </Animated.ScrollView>
   );
 };
 

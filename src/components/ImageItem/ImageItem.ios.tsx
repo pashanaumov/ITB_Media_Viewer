@@ -166,6 +166,7 @@ const ImageItem = ({
               mainVideoColor={mainVideoColor}
               onHidePageInfo={onHidePageInfo}
               doSeek={onSeek}
+              toggleHeaderFooter={toggleHeaderFooter}
             />
           )}
         </TouchableWithoutFeedback>
