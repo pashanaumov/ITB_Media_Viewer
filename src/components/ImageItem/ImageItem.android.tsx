@@ -43,6 +43,7 @@ type Props = {
   mediaType: string;
   currentIndex: number;
   mainVideoColor: string;
+  headerFooterVisible: boolean;
   onHidePageInfo: () => void;
   onSeek: () => void;
   toggleHeaderFooter: () => void;
@@ -62,6 +63,7 @@ const ImageItem = ({
   onHidePageInfo,
   onSeek,
   toggleHeaderFooter,
+  headerFooterVisible
 }: Props) => {
   const imageContainer = React.createRef<any>();
   const imageDimensions = useImageDimensions(imageSrc);
@@ -168,6 +170,7 @@ const ImageItem = ({
               onHidePageInfo={onHidePageInfo}
               doSeek={onSeek}
               toggleHeaderFooter={toggleHeaderFooter}
+              headerFooterVisible={headerFooterVisible}
             />
           </View>
         )}

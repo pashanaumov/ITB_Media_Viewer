@@ -13,6 +13,7 @@ interface Props {
   source: { uri: any };
   currentIndex: number;
   mainVideoColor?: string;
+  headerFooterVisible: boolean;
   onHidePageInfo: () => void;
   doSeek: (seeking: boolean) => void;
   toggleHeaderFooter: () => void;
@@ -26,6 +27,7 @@ export default (props: Props) => {
     onHidePageInfo,
     doSeek,
     toggleHeaderFooter,
+    headerFooterVisible
   } = props;
   const mainColor = mainVideoColor ? mainVideoColor : "rgb(255, 74, 125)";
   const videoPlayer = useRef(null);

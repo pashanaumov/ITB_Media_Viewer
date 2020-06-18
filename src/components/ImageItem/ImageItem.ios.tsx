@@ -167,6 +167,7 @@ const ImageItem = ({
               onHidePageInfo={onHidePageInfo}
               doSeek={onSeek}
               toggleHeaderFooter={toggleHeaderFooter}
+              headerFooterVisible={headerFooterVisible}
             />
           )}
         </TouchableWithoutFeedback>
