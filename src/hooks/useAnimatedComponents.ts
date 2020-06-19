@@ -6,7 +6,7 @@
  *
  */
 
-import { Animated } from "react-native";
+import { Animated } from 'react-native';
 
 const INITIAL_POSITION = { x: 0, y: 0 };
 const ANIMATION_CONFIG = {
@@ -14,17 +14,19 @@ const ANIMATION_CONFIG = {
   useNativeDriver: true,
 };
 
-const useAnimatedComponents = () => {
+const useAnimatedComponents = (toggleHeader: (value: boolean) => void) => {
   const headerTranslate = new Animated.ValueXY(INITIAL_POSITION);
   const footerTranslate = new Animated.ValueXY(INITIAL_POSITION);
 
   const toggleVisible = (isVisible: boolean) => {
     if (isVisible) {
+      toggleHeader(true);
       Animated.parallel([
         Animated.timing(headerTranslate.y, { ...ANIMATION_CONFIG, toValue: 0 }),
         Animated.timing(footerTranslate.y, { ...ANIMATION_CONFIG, toValue: 0 }),
       ]).start();
     } else {
+      toggleHeader(false);
       Animated.parallel([
         Animated.timing(headerTranslate.y, {
           ...ANIMATION_CONFIG,

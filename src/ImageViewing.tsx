@@ -39,6 +39,7 @@ type Props = {
   footerId: number;
   toggleHeaderFooter: () => void;
   onHidePageInfo: () => void;
+  toggleHeader: () => void;
 };
 
 const DEFAULT_ANIMATION_TYPE = 'fade';
@@ -67,17 +68,18 @@ function ImageViewing({
   onHidePageInfo,
   toggleHeaderFooter,
   headerFooterVisible,
+  toggleHeader
 }: Props) {
   const imageList = React.createRef<VirtualizedList<ImageSource>>();
   const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose);
   const [currentImageIndex, onScroll] = useImageIndexChange(imageIndex, SCREEN);
-  const [headerTransform, footerTransform, toggleBarsVisible] = useAnimatedComponents();
+  const [headerTransform, footerTransform, toggleBarsVisible] = useAnimatedComponents(toggleHeader);
   const [isSeeking, setIsSeeking] = useState(false);
 
   const onSeek = (seeking: boolean) => {
     setIsSeeking(seeking);
   };
-
+  
   useEffect(() => {
     if (isSeeking) {
       // @ts-ignore
@@ -99,6 +101,7 @@ function ImageViewing({
       // @ts-ignore
       imageList?.current?.setNativeProps({ scrollEnabled: !isScaled });
       toggleBarsVisible(!isScaled);
+      // toggleHeaderFooter()
     },
     [imageList],
   );
