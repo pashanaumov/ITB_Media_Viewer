@@ -39,7 +39,7 @@ type Props = {
   footerId: number;
   toggleHeaderFooter: () => void;
   onHidePageInfo: () => void;
-  toggleHeader: () => void;
+  toggleHeader: (value: boolean) => void;
 };
 
 const DEFAULT_ANIMATION_TYPE = 'fade';
@@ -68,7 +68,7 @@ function ImageViewing({
   onHidePageInfo,
   toggleHeaderFooter,
   headerFooterVisible,
-  toggleHeader
+  toggleHeader,
 }: Props) {
   const imageList = React.createRef<VirtualizedList<ImageSource>>();
   const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose);
@@ -79,7 +79,7 @@ function ImageViewing({
   const onSeek = (seeking: boolean) => {
     setIsSeeking(seeking);
   };
-  
+
   useEffect(() => {
     if (isSeeking) {
       // @ts-ignore
